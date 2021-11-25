@@ -68,7 +68,7 @@ trait AuthenticationService
                     break;
                 case 200://successful 
                     return (object)[
-                        'response' => array_merge((array)json_decode($response->content()),['message' => 'Success Login']),
+                        'response' => array_merge((array)json_decode($response->content()),['message' => 'Successs Login']),
                         'status' => $response->status()
                     ];
                     break;

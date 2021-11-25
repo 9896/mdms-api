@@ -9,10 +9,13 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Modules\Common\Traits\UsesUuid;
 use Laravel\Passport\HasApiTokens;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Modules\Symptom\Entities\Symptom;
+use Spatie\Permission\Traits\HasRoles;
 
 class Patient extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, UsesUuid;
+    use HasFactory, Notifiable, HasApiTokens, UsesUuid, HasRoles;
 
     /**
      * Mass assignable attributes
@@ -47,5 +50,16 @@ class Patient extends Authenticatable
     protected static function newFactory()
     {
         return \Modules\Patient\Database\factories\PatientFactory::new();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function symptoms(): BelongsToMany
+    {
+        return $this->belongsToMany(Symptom::class, 'symptom_user', 'user_id', 'symptom_id')
+        ->wherePivot('user', 'Patient')
+        ->withPivot('created_at', 'description', 'severity')
+        ->withTimestamps();
     }
 }

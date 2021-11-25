@@ -2,21 +2,25 @@
 
 namespace Modules\Doctor\Http\Controllers;
 
+use Auth;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Doctor\Transformers\DoctorResource;
 
 class DoctorController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     * @return Renderable
+     * Return an instance of the admin
+     * 
+     * @return adminResource
      */
-    public function index()
+    public function me():DoctorResource
     {
-        return view('doctor::index');
+        $user = Auth::user();
+        
+        return new DoctorResource($user);
     }
-
     /**
      * Show the form for creating a new resource.
      * @return Renderable

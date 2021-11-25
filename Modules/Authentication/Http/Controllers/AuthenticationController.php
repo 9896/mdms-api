@@ -5,6 +5,8 @@ namespace Modules\Authentication\Http\Controllers;
 use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Controller;
+use Modules\Doctor\Entities\Doctor;
+use Modules\Patient\Entities\Patient;
 use Modules\Authentication\Http\Requests\AdminLoginRequest;
 use Modules\Authentication\Http\Requests\DoctorLoginRequest;
 use Modules\Authentication\Http\Requests\PatientLoginRequest;
@@ -59,5 +61,90 @@ class AuthenticationController extends Controller
         ]);
     }
     
+        /**
+     * give Login Permission
+     * @param uuid
+     * @return JsonResponse
+     * 
+     */
+    public function grantDoctorLogin($uuid)
+    {
+        $user = Doctor::findUuid($uuid);
+
+        $user->givePermissionTo("login");
+
+        
+    }
+
+    /**
+     * Revoke Login Permission
+     * @param uuid
+     * @return JsonResponse
+     * 
+     */
+    public function revokeDoctorLogin($uuid)
+    {
+        $user = Doctor::findUuid($uuid);
+
+        $user->revokePermissionTo("login");
+    }
+
+        /**
+     * give Login Permission
+     * @param uuid
+     * @return JsonResponse
+     * 
+     */
+    public function grantPatientLogin($uuid)
+    {
+        $user = Patient::findUuid($uuid);
+
+        $user->givePermissionTo("login");
+    }
+
+    /**
+     * Revoke Login Permission
+     * @param uuid
+     * @return JsonResponse
+     * 
+     */
+    public function revokePatientLogin($uuid)
+    {
+        $user = Patient::findUuid($uuid);
+
+        $user->revokePermissionTo("login");
+
+        
+    }
+
+    /**
+     * give create, update, login Permission
+     * @param uuid
+     * @return JsonResponse
+     * 
+     */
+    public function grantDoctorCUD($uuid)
+    {
+        $user = Doctor::findUuid($uuid);
+
+        $user->givePermissionTo("CUD1");
+
+        return response()->json(["CUD permissions Granted"]);
+    }
+
+    /**
+     * Revoke create, update, delete Permission
+     * @param uuid
+     * @return JsonResponse
+     * 
+     */
+    public function revokeDoctorCUD($uuid)
+    {
+        $user = Doctor::findUuid($uuid);
+
+        $user->revokePermissionTo("CUD1");
+
+        return response()->json(["CUD permission Revoked"]);
+    }
    
 }

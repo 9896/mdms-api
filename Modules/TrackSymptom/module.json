@@ -1,0 +1,13 @@
+{
+    "name": "TrackSymptom",
+    "alias": "tracksymptom",
+    "description": "",
+    "keywords": [],
+    "priority": 0,
+    "providers": [
+        "Modules\\TrackSymptom\\Providers\\TrackSymptomServiceProvider"
+    ],
+    "aliases": {},
+    "files": [],
+    "requires": []
+}

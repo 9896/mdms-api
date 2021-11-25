@@ -7,12 +7,15 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Modules\Symptom\Entities\Symptom;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class Admin extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, UsesUuid;
+    use HasFactory, Notifiable, HasApiTokens, UsesUuid, HasRoles;
 
     /**
      * Mass assignable attributes
@@ -47,5 +50,16 @@ class Admin extends Authenticatable
     protected static function newFactory()
     {
         return \Modules\Admin\Database\factories\AdminFactory::new();
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function symptoms(): BelongsToMany
+    {
+        return $this->belongsToMany(Symptom::class, 'symptom_user', 'user_id', 'symptom_id')
+        ->wherePivot('user', 'Admin')
+        ->withPivot('created_at', 'description', 'severity')
+        ->withTimestamps();
     }
 }

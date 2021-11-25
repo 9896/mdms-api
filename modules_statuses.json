@@ -9,5 +9,6 @@
     "DiseaseClassification": true,
     "Doctor": true,
     "Patient": true,
-    "Symptom": true
+    "Symptom": true,
+    "TrackSymptom": true
 }

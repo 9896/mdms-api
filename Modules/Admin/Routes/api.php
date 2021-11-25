@@ -15,4 +15,14 @@ use Illuminate\Http\Request;
 
 Route::group(['middleware' => 'auth:admins-api'], function(){
     Route::get('/me', 'AdminController@me');
+
+    Route::post('/admins/revoke-doctor-cud/{uuid}', 'AdminController@revokeDoctorCUD');
+    Route::post('/admins/grant-doctor-cud/{uuid}', 'AdminController@grantDoctorCUD');
+
+    Route::post('/admins/revoke-doctor-login/{uuid}', 'AdminController@revokeDoctorLogin');
+    Route::post('/admins/grant-doctor-login', 'AdminController@grantDoctorLogin');
+
+    Route::post('/admins/revoke-patient-login/{uuid}', 'AdminController@revokePatientLogin');
+    Route::post('/admins/grant-patient-login', 'AdminController@grantPatientLogin');
+
 });

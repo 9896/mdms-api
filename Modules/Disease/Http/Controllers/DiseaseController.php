@@ -10,6 +10,7 @@ use Illuminate\Contracts\Support\Renderable;
 use Illuminate\Http\Request;
 use Modules\Symptom\Entities\Symptom;
 use Modules\Disease\Entities\Disease;
+use Modules\Patient\Entities\Patient;
 use Modules\DiseaseClassification\Entities\DiseaseClassification;
 use Modules\DiseaseCategory\Entities\DiseaseCategory;
 use Illuminate\Http\JsonResponse;
@@ -17,6 +18,7 @@ use Illuminate\Http\Resources\Json\ResourceCollection;
 use Modules\Disease\Transformers\DiseaseResource;
 use Modules\Disease\Http\Requests\CreateDiseaseRequest;
 use Modules\Disease\Http\Requests\SearchDiseaseRequest;
+use Modules\Disease\Http\Requests\DiseaseBySymptomsRequest;
 use Modules\Disease\Http\Requests\UpdateDiseaseRequest;
 use Illuminate\Support\Str;
 
@@ -76,16 +78,6 @@ class DiseaseController extends Controller
          */
         $disease = Disease::findUuid($uuid);
 
-        // $disease->update([
-        //     'name' => $request->name,
-        //     'content' => $request->content,
-        //     'prevelance_rate' => $request->prevelance_rate,
-        //     'age_start' => $request->age_start,
-        //     'age_end' => $request->age_end,
-
-        // ]);
-        // return response()
-        // ->json(["Disease update successful"]);
         DB::beginTransaction();
 
         try{
@@ -173,7 +165,7 @@ class DiseaseController extends Controller
         for($i = 0; $i < count($request->symptom); $i++){
             $symptomIds[$i] = Symptom::findUuid($request->symptom[$i])->id;
         }
-        $disease->symptoms()->attach($symptomIds);;
+        $disease->symptoms()->attach($symptomIds);
         
         if(count($request->disease_category) != 0){
             $diseaseCategoryIds = [];
@@ -219,21 +211,69 @@ class DiseaseController extends Controller
     }
 
     /**
-     * Fill pivot table with data
-     * @param string $param
-     * @return void
+     * Search Disease based on symptoms given
+     * 
+     * @param DiseaseBySymptomsRequest
+     * @return 
      */
-    private function addToPivot($requestParam)
+    public function diseaseBySymptoms(DiseaseBySymptomsRequest $request)
     {
-        // $collection = Str::of($requestParam, '_');
-        // $classname;
-        // $relationshipName;
+        $diseasesCollector = [];
+        $collectionDiseasesCollector = collect($diseasesCollector);
+        $allDiseases = [];
+        
+        for($i = 0; $i < count($request->symptom); $i++){
+            $diseases[$i] = Symptom::findUuid($request->symptom[$i])->disease;
+            $allDiseases = $collectionDiseasesCollector->union($diseases)->flatten();
+        }
 
-        // $requestParam."Ids" = [];
-        // for($i = 0; $i < count($request->$requestParam); $i++){
-        //     $symptomsIds[$i] = Symptom::findUuid($request->$requestParam[$i])->id;
-        // }
-        // $disease->symptom()->attach($symptomsIds);
-    }
+        $diseaseIds = [];
+        $finalDiseaseIds = [];
+        $collectionFinalDiseaseIds = [];
+        $namedAllDiseases = [];
+
+        for($i = 0; $i < count($allDiseases); $i++){
+            $diseaseIds[$i] = $allDiseases[$i]->id;
+            $namedAllDiseases[$allDiseases[$i]->name] = $allDiseases[$i]; 
+
+        }
+        $allDiseaseIds = $diseaseIds;
+        $likelyDiseaseIds = [];
+        if(count($request->symptom) > 1){
+            $likelyDiseaseIds = collect($allDiseaseIds)->duplicates()->mode();
+        }else{
+            $likelyDiseaseIds = collect($allDiseaseIds);
+        }
+
+        $likelyDiseases = collect($namedAllDiseases)->unique()->values()->filter(function($value, $key)use($likelyDiseaseIds){
+            foreach($likelyDiseaseIds as $likelyDiseaseId){
+                if( $value->id == $likelyDiseaseId){
+                   return true; 
+                }
+            }
+        });
+
+        return response()->json(["data"=>DiseaseResource::collection($likelyDiseases)]);
+     }
+
+     /**
+      * Get stats
+      */
+      public function getStatistics() 
+      {
+          $symptoms = Symptom::all()->count();
+          $diseases = Disease::all()->count();
+          $doctors = Doctor::all()->count();
+          $users = Patient::all()->count();
+
+          return response()->json([
+                'doctors' => $doctors,
+                'users' => $users,
+                'symptoms' => $symptoms,
+                'diseases' => $diseases
+         ]);
+
+
+      }
 
 }

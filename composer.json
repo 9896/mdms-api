@@ -12,7 +12,8 @@
         "laravel/passport": "^10.1",
         "laravel/sanctum": "^2.11",
         "laravel/tinker": "^2.5",
-        "nwidart/laravel-modules": "^8.2"
+        "nwidart/laravel-modules": "^8.2",
+        "spatie/laravel-permission": "^5.4"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

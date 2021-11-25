@@ -28,3 +28,4 @@ Route::post('doctors/login', 'AuthenticationController@doctorLogin')->name('Auth
 
 //patient users login
 Route::post('patients/login', 'AuthenticationController@patientLogin')->name('Authentication::patient-login');
+

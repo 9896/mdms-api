@@ -5,16 +5,19 @@ namespace Modules\Doctor\Entities;
 use Modules\Common\Traits\UsesUuid;
 use Illuminate\Database\Eloquent\Model;
 use Modules\Disease\Entities\Disease;
+use Modules\Symptom\Entities\Symptom;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Passport\HasApiTokens;
+use Spatie\Permission\Traits\HasRoles;
 
 class Doctor extends Authenticatable
 {
-    use HasFactory, Notifiable, HasApiTokens, UsesUuid;
+    use HasFactory, Notifiable, HasApiTokens, UsesUuid, HasRoles;
 
     /**
      * Mass assignable attributes
@@ -58,5 +61,16 @@ class Doctor extends Authenticatable
     public function disease(): HasMany
     {
         return $this->hasMany(Disease::class);
+    }
+
+    /**
+     * @return BelongsToMany
+     */
+    public function symptoms(): BelongsToMany
+    {
+        return $this->belongsToMany(Symptom::class, 'symptom_user', 'user_id', 'symptom_id')
+        ->wherePivot('user', 'Doctor')
+        ->withPivot('created_at', 'description', 'severity')
+        ->withTimestamps();
     }
 }
