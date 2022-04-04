@@ -29,6 +29,7 @@ Route::group(['middleware' => 'auth:admins-api', 'prefix' => 'admin'], function(
     Route::post('/symptoms/track-symptom', 'SymptomController@trackSymptom');
     Route::get('/symptoms/get-tracked-symptoms', 'SymptomController@getTrackedSymptoms');
     Route::get('/symptoms/get-tracked-symptom/{uuid}', 'SymptomController@getTrackedSymptom');
+    Route::get('/symptoms/show-tracked-symptom/{uuid}/{created_at}', 'SymptomController@showTrackedSymptom');
     Route::post('/symptoms/edit-tracked-symptom', 'SymptomController@EditTrackedSymptom');
     Route::post('/symptoms/delete-tracked-symptom/{uuid}/{created_at}', 'SymptomController@deleteTrackedSymptom');
 });
@@ -37,6 +38,7 @@ Route::group(['middleware' => 'auth:admins-api', 'prefix' => 'admin'], function(
  * DOCTOR
  */
 Route::group(['middleware' => 'auth:doctors-api', 'prefix' => 'doctor'], function(){
+    Route::get('/symptoms/get-all/{get?}', 'SymptomController@getAllSymptoms');
     Route::get('/symptoms/get-all', 'SymptomController@getAllSymptoms');
     Route::get('/symptoms/get-symptom/{uuid}', 'SymptomController@showSymptom');
     Route::post('/symptoms/store-symptom', 'SymptomController@storeSymptom')->middleware(['permission:CUD1']);
@@ -56,9 +58,13 @@ Route::group(['middleware' => 'auth:doctors-api', 'prefix' => 'doctor'], functio
  */
 Route::group(['middleware' => 'auth:patients-api', 'prefix' => 'patient'], function(){
     Route::post('/symptoms/get-symptoms', 'SymptomController@getSymptoms');
+    Route::get('/symptoms/get-all/{get?}', 'SymptomController@getAllSymptoms');
     Route::post('/symptoms/track-symptom', 'SymptomController@trackSymptom');
     Route::get('/symptoms/get-tracked-symptoms', 'SymptomController@getTrackedSymptoms');
+    Route::get('/symptoms/show-tracked-symptom/{uuid}/{created_at}', 'SymptomController@showTrackedSymptom');
     Route::get('/symptoms/get-tracked-symptom/{uuid}', 'SymptomController@getTrackedSymptom');
+    Route::post('/symptoms/edit-tracked-symptom', 'SymptomController@EditTrackedSymptom');
+    Route::post('/symptoms/delete-tracked-symptom/{uuid}/{created_at}', 'SymptomController@deleteTrackedSymptom');
 });
 
 /**

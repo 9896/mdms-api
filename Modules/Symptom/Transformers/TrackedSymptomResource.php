@@ -19,7 +19,7 @@ class TrackedSymptomResource extends JsonResource
             'name' => $this->name,
             'severity' => $this->pivot->severity,
             'description' => $this->pivot->description,
-            'created_at' => $this->pivot->created_at->toDateTimeString(),
+            'created_at' => ($this->pivot->created_at == null) ? $this->pivot->created_at : $this->pivot->created_at->toDateTimeString(),
         ];
     }
 }

@@ -20,6 +20,7 @@ class DoctorResource extends JsonResource
             'email' => $this->email,
             'phone_number' => $this->phone_number,
             'uuid' => $this->uuid,
+            'CUD' => $this->hasPermissionTo('CUD1')
         ];
     }
 }

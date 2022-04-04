@@ -21,3 +21,12 @@ Route::group(['middleware' => 'auth:doctors-api'], function(){
     Route::get('/me', 'DoctorController@me');
 
 });
+
+Route::group(['middleware' => 'auth:admins-api'], function(){
+   // Route::get('/me', 'DoctorController@me');
+    Route::get('/doctors/get-all-doctors', 'DoctorController@getAllDoctors');
+    Route::post('/doctors/store-doctor', 'DoctorController@storeDoctor');
+    //Route::post('/doctors/update', 'DoctorController@update');
+
+});
+

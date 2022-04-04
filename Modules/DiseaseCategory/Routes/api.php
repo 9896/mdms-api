@@ -21,7 +21,7 @@ Route::group(['middleware' => 'auth:admins-api', 'prefix' => 'admin'], function(
     Route::get('/disease-categories/get-disease-category/{uuid}', 'DiseaseCategoryController@showDiseaseCategory');
     Route::post('/disease-categories/store-disease-category', 'DiseaseCategoryController@storeDiseaseCategory');
     Route::get('/disease-categories/delete-disease-category/{uuid}', 'DiseaseCategoryController@deleteDiseaseCategory');
-    Route::post('/disease-categories/get-disease-categories', 'DiseaseCategoryController@getDiseaseCategory');
+    Route::post('/disease-categories/get-disease-categories', 'DiseaseCategoryController@getDiseaseCategories');
     Route::post('/disease-categories/update-disease-category/{uuid}', 'DiseaseCategoryController@updateDiseaseCategory');
 
 });
@@ -30,7 +30,7 @@ Route::group(['middleware' => 'auth:admins-api', 'prefix' => 'admin'], function(
  * DOCTOR
  */
 Route::group(['middleware' => 'auth:doctors-api', 'prefix' => 'doctor'], function(){
-    Route::get('/disease-categories/get-all', 'DiseaseCategoryController@getAllDiseaseCategorys');
+    Route::get('/disease-categories/get-all', 'DiseaseCategoryController@getAllDiseaseCategories');
     Route::get('/disease-categories/get-disease-category/{uuid}', 'DiseaseCategoryController@showDiseaseCategory');
     Route::post('/disease-categories/store-disease-category', 'DiseaseCategoryController@storeDiseaseCategory');
     Route::get('/disease-categories/delete-disease-category/{uuid}', 'DiseaseCategoryController@deleteDiseaseCategory');

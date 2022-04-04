@@ -20,6 +20,8 @@ Route::middleware('auth:api')->get('/authentication', function (Request $request
 //patient users register
 Route::post('patients/register', 'RegisterController@register');
 
+Route::post('doctors/register', 'RegisterController@registerDoctor');
+
 //admin users login
 Route::post('admins/login', 'AuthenticationController@adminLogin')->name('Authentication::admin-login');
 

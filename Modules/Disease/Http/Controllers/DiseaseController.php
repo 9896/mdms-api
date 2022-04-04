@@ -43,6 +43,21 @@ class DiseaseController extends Controller
     }
 
     /**
+     * Fetch all diseases from the database
+     * @param null
+     * @return ResourceCollection
+     */
+    public function getAllDiseasesUnpaginated(): ResourceCollection
+    {
+        /**
+         * @var Disease $diseases
+         */
+        $diseases = Disease::get();
+        
+        return DiseaseResource::collection($diseases);
+    }
+
+    /**
      * Get diseases based on search query
      * @param SearchDiseaseRequest $request
      * @return JsonResponse

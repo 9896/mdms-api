@@ -43,6 +43,7 @@ class SymptomController extends Controller
         return SymptomResource::collection($symptoms);
     }
 
+    
     /**
      * Get symptoms based on search query
      * @param SearchSymptomRequest $request
@@ -97,14 +98,11 @@ class SymptomController extends Controller
         /**
          * @var Symptom $symptom
          */
-       //$symptom = Symptom::findUuid($uuid);
+       $symptom = Symptom::findUuid($uuid);
     
         
-       // return new SymptomResource($symptom);
-        //$user = Doctor::findUuid($uuid);
-        $user = Auth::user();
+       return new SymptomResource($symptom);
 
-        //$tokenId = $user->token()->id;
         return response()->json([$user->token()->id]);
     }
 
@@ -148,13 +146,9 @@ class SymptomController extends Controller
 
         $symptoms = $user->symptoms;
         
-        $symptomNames = [];
-        for($i = 0; $i < count($symptoms); $i++){
-            $symptomNames[$symptoms[$i]->uuid] = $symptoms[$i]->name;
-        };
-        $freeSymptomNames = collect($symptomNames)->unique();
-        
-        return response()->json([$freeSymptomNames]);
+
+        $uniqueSymptoms = $symptoms->unique();
+        return SymptomResource::collection($uniqueSymptoms);
 
     }
     
@@ -198,11 +192,13 @@ class SymptomController extends Controller
         $targetSymptom = "";
         
         foreach($symptoms as $symptom){
+            if($symptom->pivot->created_at !== null){
             if($symptom->pivot->created_at->toDateTimeString() == $created_at){
                 $targetSymptom = $symptom;
                 //return response()->json(["Yeez, tumemake" => $targetSymptom]);
                 return new TrackedSymptomResource($targetSymptom);
             }
+        }
         }
 
     }
@@ -212,7 +208,7 @@ class SymptomController extends Controller
      * @param UpdateTrackedSymptom
      * @return JsonResponse
      */
-    public function EditTrackedSymptom(UpdateTrackedSymptomRequest $request): UpdateTrackedSymptom
+    public function EditTrackedSymptom(UpdateTrackedSymptomRequest $request): JsonResponse
     {
         $user = Auth::user();
         $userId = $user->id;

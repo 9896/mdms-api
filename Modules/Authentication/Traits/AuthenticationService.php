@@ -74,7 +74,7 @@ trait AuthenticationService
                     break;
                 default:
                 //Unprocessable Entity response status code, syntax of request is correct but it was unable to process contained instruction
-                    return (object)['response' => $this->authFail, 'status' => 444];
+                    return (object)['response' => $this->authFail, 'status' => 500];
             }
         } catch(Exception $exception){
             Log::error($exception->getMessage());

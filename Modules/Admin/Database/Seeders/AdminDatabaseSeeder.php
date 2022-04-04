@@ -19,17 +19,17 @@ class AdminDatabaseSeeder extends Seeder
      */
     public function run()
     {
-        // Model::unguard();
-        // $hashedPassword = Hash::make(12345678);
-        // $faker = App::make(Faker::class);
-        // DB::table('admins')->insert([
-        //     'uuid' => Str::uuid(),
-        //     'first_name' => $faker->name,
-        //     'last_name' => $faker->name,
-        //     'email' => $faker->unique()->safeEmail,
-        //     'phone_number' =>  $faker->phoneNumber,
-        //     'password' => $hashedPassword,
-        // ]);
+        Model::unguard();
+        $hashedPassword = Hash::make(12345678);
+        $faker = App::make(Faker::class);
+        DB::table('admins')->insert([
+            'uuid' => Str::uuid(),
+            'first_name' => $faker->name,
+            'last_name' => $faker->name,
+            'email' => $faker->unique()->safeEmail,
+            'phone_number' =>  $faker->phoneNumber,
+            'password' => $hashedPassword,
+        ]);
 
         // $this->call("OthersTableSeeder");
     }
